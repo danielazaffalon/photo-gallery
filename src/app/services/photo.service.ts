@@ -124,30 +124,22 @@ export class PhotoService {
     }
   }
 
-  public async deletePhotos(selectedIndex: number[]) {
-    
-    const photosToDelete = selectedIndex.map(index => this.photos[index]);
-
-    // Remove photo from the filesystem
-    for(const photo of photosToDelete){
-      try {
-        await Filesystem.deleteFile({
-          path: photo.filepath,
-          directory: Directory.Data
-        });
-      } catch (error) {
-        console.error('Error deleting file', error);
-      }
-    }
+  public async deletePicture(photo: UserPhoto, position: number) {
+    // Remove this photo from the Photos reference data array
+    this.photos.splice(position, 1);
   
-    // Remove photo from the photos array
-    // this.photos = this.photos.filter(p => p.filepath !== photo.filepath);
-    this.photos = this.photos.filter((_, index) => !selectedIndex.includes(index));
-
-    // Update the stored photo list
-    await Preferences.set({
+    // Update photos array cache by overwriting the existing photo array
+    Preferences.set({
       key: this.PHOTO_STORAGE,
-      value: JSON.stringify(this.photos),
+      value: JSON.stringify(this.photos)
+    });
+  
+    // delete photo file from filesystem
+    const filename = photo.filepath.substring(photo.filepath.lastIndexOf('/') + 1);
+  
+    await Filesystem.deleteFile({
+      path: filename,
+      directory: Directory.Data
     });
   }
   

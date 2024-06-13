@@ -16,26 +16,14 @@
   <ion-grid>
     <ion-row>
       <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
-        <ion-img [src]="photo.webviewPath"
-        (click)="selectPhoto(position)" [class.selected]="selectedPhotos.includes(position)"></ion-img>
+        <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed" class="fab-container">
-    <ion-grid>
-      <ion-row class="fab-row">
-        <ion-col size="auto">
-          <ion-fab-button (click)="addPhotoToGallery()">
-            <ion-icon name="camera"></ion-icon>
-          </ion-fab-button>
-        </ion-col>
-        <ion-col size="auto" *ngIf="selectedPhotos.length">
-          <ion-fab-button (click)="deletePhotos()">
-            <ion-icon name="trash"></ion-icon>
-          </ion-fab-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="addPhotoToGallery()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
   </ion-fab>
 </ion-content>
